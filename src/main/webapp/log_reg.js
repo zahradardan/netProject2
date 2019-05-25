@@ -32,7 +32,32 @@
      }
      if(go === true){
 
-         window.location.href = "editprofile.html";
+     var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "http://localhost:8080/contacts/rest/contact/logIn",
+                "method": "POST",
+                "headers": {
+                  "cache-control": "no-cache",
+                  "postman-token": "c881cff2-ee43-9738-1678-f47dd7b64a39"
+                },
+                 "data": {
+                            "username": document.getElementById("user_name").value,
+                            "password": document.getElementById("pass").value,
+                        }
+              }
 
+              $.ajax(settings).done(function (response) {
+                console.log(response);
+                if(!response.success)
+                 alert(response.message);
+                 else
+                 window.location.href ="editprofile.html";
+              });
      }
+
  }
+
+
+
+

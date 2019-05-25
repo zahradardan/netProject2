@@ -24,26 +24,28 @@ function reapetpasswordcheck() {
 
 }
 
-function register() {
-    var settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "http://localhost:8080/contacts/rest/contact/save",
-        "method": "POST",
-        "headers": {
-            "content-type": "application/x-www-form-urlencoded",
-            "cache-control": "no-cache",
-            "postman-token": "964e5a18-428a-ecd7-0ca4-1869c168698c"
-        },
-        "data": {
-            "usename": "zahra",
-            "password": "12345678",
-            "isStudent": "false"
-        }
-    }
+function register(isStudent) {
 
-    $.ajax(settings).done(function (response) {
-        console.log(response);
-        alert(response.id);
-    });
+   var settings = {
+     "async": true,
+     "crossDomain": true,
+     "url": "http://localhost:8080/contacts/rest/contact/save",
+     "method": "POST",
+     "headers": {
+       "cache-control": "no-cache",
+       "postman-token": "c881cff2-ee43-9738-1678-f47dd7b64a39"
+     },
+      "data": {
+                 "username": document.getElementById("email").value,
+                 "password": document.getElementById("psw").value,
+                 "isStudent": isStudent
+
+             }
+   }
+
+   $.ajax(settings).done(function (response) {
+     console.log(response);
+      alert(response.message);
+   });
 }
+

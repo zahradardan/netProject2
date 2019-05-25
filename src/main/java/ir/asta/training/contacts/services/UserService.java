@@ -1,10 +1,15 @@
 package ir.asta.training.contacts.services;
 
+import javax.servlet.ServletException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import ir.asta.training.contacts.entities.UserEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 @Path("/contact")
 
@@ -13,18 +18,15 @@ public interface UserService {
 
 	@Path("/save")
 
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-
-
-	public String save(@FormParam("username") String username, @FormParam("password") String password,
-			@FormParam("isStudent") boolean isStudent);
-
-	@GET
-
 	@Produces(MediaType.APPLICATION_JSON)
 
-	@Path("/logIn/{password}")
+	public ActionResult<UserEntity> save(@FormParam("username") String username, @FormParam("password") String password,
+			@FormParam("isStudent") boolean isStudent);
 
-	public UserEntity load(@FormParam("password") String password,@FormParam("username") String username);
+	@POST
+
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/logIn")
+	public ActionResult<UserEntity> load(@FormParam("password") String password,@FormParam("username") String username) throws IOException, NoSuchAlgorithmException, ServletException;
 
 }

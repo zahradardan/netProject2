@@ -17,29 +17,29 @@ public class UserDao {
 	private EntityManager entityManager;
 
 	public UserEntity save(UserEntity ue) {
-		entityManager.persist(ue);
-		return ue;
-
+			entityManager.persist(ue);
+			return ue;
 	}
+
 	public void load(String username ) {
-		String queryString = "select e from UserTB e where username := UsereName ";
-		Query query = entityManager.createQuery(queryString);
+		Query query = entityManager.createQuery("select e from UserEntity e where e.name = :username ");
 	}
 
-	public boolean containsUser(String username){
-		Query query = entityManager.createQuery("select e from UserEntity e where username=:username");
-		query.setParameter("username", username);
-		List list = query.getResultList();
-		return list.size() > 0;
-	}
+	public boolean containsUser(String username) {
+        Query query = entityManager.createQuery("select e from UserEntity e where e.name = :username");
+        List results = query.setParameter("username", username).getResultList();
+        if (results.isEmpty())
+            return false;
+        else
+            return true;
+    }
 
 	public UserEntity checkUsernameAndPassword(String username, String password){
-		Query query = entityManager.createQuery("select e from UserEntity e where username=:username and password=:password");
-		query.setParameter("username", username).setParameter("password", password);
-		List<UserEntity> list = query.getResultList();
-		if (list.size() > 0){
-			return list.get(0);
-		}
-		return null;
+		Query query = entityManager.createQuery("select e from UserEntity e where e.name= :username and e.password= :password");
+		List result=query.setParameter("username", username).setParameter("password", password).getResultList();
+		if(result.isEmpty())
+		    return null;
+		else
+		    return (UserEntity) result.get(0);
 	}
 }

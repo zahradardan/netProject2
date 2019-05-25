@@ -21,7 +21,4 @@ public class CaseDao {
         entityManager.persist(entity);
     }
 
-
-
-
 }

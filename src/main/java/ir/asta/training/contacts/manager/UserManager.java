@@ -2,45 +2,52 @@ package ir.asta.training.contacts.manager;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Context;
 
 import ir.asta.training.contacts.dao.UserDao;
 import ir.asta.training.contacts.entities.UserEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 @Named("UserManager")
 public class UserManager {
-	
-	@Inject
-	 private UserDao dao;
 
-	@Transactional
-	
-	public ActionResult<UserEntity> save(UserEntity entity) {
-		ActionResult<UserEntity> result = new ActionResult<>();
-		if (!dao.containsUser(entity.getName())) {
-			result.setData(dao.save(entity));
-			result.setSuccess(true);
-		}
-		else {
-			result.setMessage("کاربر با این نام کاربری وجود دارد");
-		}
-		return result;
-	}
+    @Inject
+    private UserDao dao;
 
-	public ActionResult<UserEntity> login(String username, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-		UserEntity entity = dao.checkUsernameAndPassword(username, password);
-		ActionResult<UserEntity> result = new ActionResult<>();
-		result.setData(entity);
-		if (entity != null){
-			result.setSuccess(true);
-		}
-		else {
-			result.setMessage("نام کاربری یا رمز عبور اشتباه است");
-		}
-		return result;
-	}
+    @Context
+    public HttpServletRequest request;
+    @Context
+    public HttpServletResponse response;
+
+    @Transactional
+
+    public ActionResult save(UserEntity entity) {
+        if (!dao.containsUser(entity.getName())) {
+            return new ActionResult<UserEntity>(true, "ثبت نام با موفقیت انجام شد.", dao.save(entity));
+        } else {
+            return new ActionResult<String>(false, "ثبت نام با شکست مواجه شد.", "");
+        }
+    }
+
+    public ActionResult<UserEntity> login(String username, String password) throws IOException, NoSuchAlgorithmException, ServletException {
+        ActionResult<UserEntity> result = new ActionResult<>();
+        if (dao.checkUsernameAndPassword(username, password) == null) {
+            result.setSuccess(false);
+            result.setMessage("اطلاعات وارد شده صحیح نمی باشد.");
+
+        } else {
+            result.setSuccess(true);
+            result.setMessage("کاربر وارد شد.");
+        }
+        return result;
+    }
 }
