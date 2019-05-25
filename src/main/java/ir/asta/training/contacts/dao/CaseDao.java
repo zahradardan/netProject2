@@ -1,7 +1,6 @@
 package ir.asta.training.contacts.dao;
 
 import ir.asta.training.contacts.entities.CaseEntity;
-import ir.asta.training.contacts.entities.ContactEntity;
 import ir.asta.training.contacts.entities.UserEntity;
 
 import javax.inject.Named;
