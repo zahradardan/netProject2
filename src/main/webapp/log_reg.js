@@ -51,8 +51,10 @@
                 console.log(response);
                 if(!response.success)
                  alert(response.message);
-                 else
+                 else{
+                 window.localStorage.setItem('user',settings['data']['username'] );
                  window.location.href ="editprofile.html";
+                 }
               });
      }
 
