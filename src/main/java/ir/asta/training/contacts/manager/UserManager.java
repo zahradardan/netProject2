@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Named("UserManager")
 public class UserManager {
@@ -49,5 +50,40 @@ public class UserManager {
             result.setMessage("کاربر وارد شد.");
         }
         return result;
+    }
+
+    public ActionResult<List<UserEntity>> management()
+    {
+        List<UserEntity> lu = dao.management();
+        if (lu!= null) {
+            return new ActionResult<List<UserEntity>>(true, "یکیldjkf پیدا شد.",lu);
+        }
+        else {
+            return new ActionResult<List<UserEntity>>(false, "هیشکی پیدا نشد", null);
+        }
+    }
+    public ActionResult<Integer> manage_del(String username){
+
+        int s = dao.manager_del(username);
+
+            return new ActionResult<Integer>(true, "کاربر حذف شد",s);
+    }
+
+    public ActionResult<UserEntity> manage_up(String username){
+        UserEntity ue = dao.manager_up(username);
+        if(ue!=null) {
+            return new ActionResult<UserEntity>(true, "کاربر تایید شد.", dao.manager_up(username));
+        }else{
+            return new ActionResult<UserEntity>(false, "کاربر تایید نشد.", null);
+
+        }
+    }
+    public ActionResult<UserEntity> manage_act(String username){
+        UserEntity ue = dao.manager_act(username);
+        if(ue!=null) {
+            return new ActionResult<UserEntity>(true, "کاربر غیر فعال شد.", dao.manager_up(username));
+        }else{
+            return new ActionResult<UserEntity>(false, "درخواست با مشکل رو به رو شد.", null);
+        }
     }
 }
