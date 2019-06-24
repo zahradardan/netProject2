@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @Named("UserManager")
 public class UserManager {
@@ -51,39 +50,24 @@ public class UserManager {
         }
         return result;
     }
+    public ActionResult<UserEntity> editprofile(String oldpassword, String newpassword,String username) throws IOException, NoSuchAlgorithmException, ServletException {
+        ActionResult<UserEntity> result = new ActionResult<>();
 
-    public ActionResult<List<UserEntity>> management()
-    {
-        List<UserEntity> lu = dao.management();
-        if (lu!= null) {
-            return new ActionResult<List<UserEntity>>(true, "یکیldjkf پیدا شد.",lu);
+
+       if(dao.checkUsernameAndPassword(username,oldpassword)==null){
+           result.setSuccess(false);
+           result.setMessage("رمز عبور نادرست است"  + oldpassword);
+       }
+        else if(dao.upadatepassword(oldpassword,newpassword,username)){
+            result.setSuccess(true);
+            result.setMessage("رمز عبور عوض شد");
         }
-        else {
-            return new ActionResult<List<UserEntity>>(false, "هیشکی پیدا نشد", null);
-        }
-    }
-    public ActionResult<Integer> manage_del(String username){
-
-        int s = dao.manager_del(username);
-
-            return new ActionResult<Integer>(true, "کاربر حذف شد",s);
+       else{
+           result.setSuccess(false);
+           result.setMessage("تعویض با مشکل مواجه شد");
+       }
+       return result;
     }
 
-    public ActionResult<UserEntity> manage_up(String username){
-        UserEntity ue = dao.manager_up(username);
-        if(ue!=null) {
-            return new ActionResult<UserEntity>(true, "کاربر تایید شد.", dao.manager_up(username));
-        }else{
-            return new ActionResult<UserEntity>(false, "کاربر تایید نشد.", null);
 
-        }
-    }
-    public ActionResult<UserEntity> manage_act(String username){
-        UserEntity ue = dao.manager_act(username);
-        if(ue!=null) {
-            return new ActionResult<UserEntity>(true, "کاربر غیر فعال شد.", dao.manager_up(username));
-        }else{
-            return new ActionResult<UserEntity>(false, "درخواست با مشکل رو به رو شد.", null);
-        }
-    }
 }
