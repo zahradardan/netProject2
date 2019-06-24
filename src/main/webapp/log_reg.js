@@ -57,6 +57,31 @@
                  }
               });
      }
+
+ }
+
+ function  edit() {
+    
+     var settings = {
+         "async": true,
+         "crossDomain": true,
+         "url": "http://localhost:8080/contacts/rest/contact/edit",
+         "method": "POST",
+         "headers": {
+             "cache-control": "no-cache",
+             "postman-token": "c881cff2-ee43-9738-1678-f47dd7b64a39"
+         },
+         "data": {
+             "oldpassword": document.getElementById("oldpassword").value,
+             "newpassword": document.getElementById("newpassword").value,
+             "username":window.localStorage.getItem('user')
+         }
+     }
+
+     $.ajax(settings).done(function (response) {
+         console.log(response);
+         alert("password changed");
+     });
  }
 
 
