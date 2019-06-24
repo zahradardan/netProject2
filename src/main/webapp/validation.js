@@ -3,6 +3,7 @@ function passwordcheck() {
     var string = document.getElementById("psw").value;
     var error1 = document.getElementById("error1");
 
+
     if(string.length < 8) {
         error1.style.visibility = "visible";
     }else{
@@ -24,7 +25,10 @@ function reapetpasswordcheck() {
 
 }
 
-function register(isStudent) {
+function register(isStudent,isTeacher) {
+   if(document.getElementById("email").value.length<1){
+   alert("!نام کاربری خود را وارد کنید")
+   }else{
 
    var settings = {
      "async": true,
@@ -38,8 +42,8 @@ function register(isStudent) {
       "data": {
                  "username": document.getElementById("email").value,
                  "password": document.getElementById("psw").value,
-                 "isStudent": isStudent
-
+                 "student": isStudent,
+                 "teacher": isTeacher
              }
    }
 
@@ -47,5 +51,6 @@ function register(isStudent) {
      console.log(response);
       alert(response.message);
    });
+   }
 }
 

@@ -42,14 +42,15 @@
                 <input type="text" placeholder="Enter Email" id="email" required >
 
                 <label for="psw"><b>رمز عبور</b></label>
-                <input type="password" placeholder="Enter Password" id="psw" required onkeypress="passwordcheck()">
+                <input type="password" placeholder="Enter Password" id="psw" required onkeyup="passwordcheck()">
                 <p style="color: indianred;visibility: hidden;margin-right: 10%" id="error1"> رمز عبور باید شامل حداقل 8 کاراکتر باشد</p>
                 <label for="psw-repeat"><b>تکرار رمز عبور</b></label>
-                <input type="password" placeholder="Repeat Password" id="psw-repeat" required onkeypress="reapetpasswordcheck()">
+                <input type="password" placeholder="Repeat Password" id="psw-repeat" required onkeyup="reapetpasswordcheck()">
                 <p style="color: indianred;visibility: hidden;margin-right: 10%" id="error2">رمز عبور وارد شده با رمز عبور اول مطابقت ندارد.</p>
 
-                <button class="user_mode" style="float: right ; margin-right: 25%" onclick="register(true)" >ثبت نام دانشجویی</button>
-                <button class="user_mode" style="float: left ; margin-left: 25%"  onclick="register(false)" >ثبت نام کارمندی</button>
+                <button class="user_mode" style="float: right ; margin-right: 10%" onclick="register(true,false)" >ثبت نام دانشجویی</button>
+                <button class="user_mode" style="alignment: center ; margin-right: 10%"  onclick="register(false,false)" >ثبت نام کارمندی</button>
+                <button class="user_mode" style="float: right ; margin-right: 10%"  onclick="register(false,true)" >ثبت نام استادی</button>
 
             </div>
             </div>
