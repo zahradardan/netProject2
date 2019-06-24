@@ -1,7 +1,5 @@
 package ir.asta.training.contacts.dao;
 
-
-
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,7 +23,7 @@ public class UserDao {
 	}
 
 	public void load(String username ) {
-		Query query = entityManager.createQuery("select e from UserEntity e where e.name = :username");
+		Query query = entityManager.createQuery("select e from UserEntity e where e.name = :username ");
 	}
 
 	public boolean containsUser(String username) {
@@ -37,6 +35,22 @@ public class UserDao {
             return true;
     }
 
+    @Transactional
+    public boolean upadatepassword(String password,String newpassword,String username){
+		Query query = entityManager.createQuery("select e from UserEntity e where e.name= :username and e.password= :password");
+		List result = query.setParameter("username",username).setParameter("password",password).getResultList();
+		if(!result.isEmpty()) {
+			UserEntity ue =  (UserEntity) result.get(0);
+			ue.setPassword(newpassword);
+			entityManager.merge(ue);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
 	public UserEntity checkUsernameAndPassword(String username, String password){
 		Query query = entityManager.createQuery("select e from UserEntity e where e.name= :username and e.password= :password");
 		List result=query.setParameter("username", username).setParameter("password", password).getResultList();
@@ -44,44 +58,5 @@ public class UserDao {
 		    return null;
 		else
 		    return (UserEntity) result.get(0);
-	}
-
-	public List<UserEntity> management(){
-		Query query = entityManager.createQuery("select e from UserEntity e where e.student = false");
-		List result = query.getResultList();
-
-		if(result.isEmpty()){
-			return null;
-		}else{
-			return result;
-		}
-	}
-
-
-	@Transactional
-	public int manager_del(String username){
-		Query query = entityManager.createQuery("DELETE from UserEntity e where e.name = :username");
-		int p =query.setParameter("username",username).executeUpdate();
-		return p;
-	}
-
-	@Transactional
-	public UserEntity manager_up(String username){
-		Query query = entityManager.createQuery("select e from UserEntity e where e.name = :username");
-		List results = query.setParameter("username", username).getResultList();
-		UserEntity ue = (UserEntity) results.get(0);
-		ue.setConfirmed(true);
-		entityManager.merge(ue);
-		return ue;
-	}
-
-	@Transactional
-	public UserEntity manager_act(String username){
-		Query query = entityManager.createQuery("select e from UserEntity e where e.name = :username");
-		List results = query.setParameter("username", username).getResultList();
-		UserEntity ue = (UserEntity) results.get(0);
-		ue.setActivate(false);
-		entityManager.merge(ue);
-		return ue;
 	}
 }
