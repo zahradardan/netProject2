@@ -13,7 +13,6 @@ import ir.asta.wise.core.datamanagement.ActionResult;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @Named("UserService")
 public class UserServiceImp implements UserService {
@@ -22,38 +21,26 @@ public class UserServiceImp implements UserService {
     UserManager manager;
 
     @Override
-    public ActionResult<UserEntity> save(String username, String password, boolean isStudent,boolean isTeacher) {
+
+    public ActionResult<UserEntity> save(String username, String password, boolean isStudent) {
 
         UserEntity entity = new UserEntity();
         entity.setName(username);
         entity.setPassword(password);
-        entity.setStudent(isStudent);
-        entity.setTeacher(isTeacher);
+        entity.setStatus(isStudent);
         return manager.save(entity);
+
+//			return entity.getId() + " " +entity.getName()+" ";
+//			return new ActionResult<Long>(true, "New contact saved successfully.", entity.getId());
     }
 
     @Override
     public ActionResult<UserEntity> load(String password, String username) throws IOException, NoSuchAlgorithmException, ServletException {
         return manager.login(username, password);
     }
-
     @Override
-    public ActionResult<List<UserEntity>> management(){
-        return manager.management();
+    public ActionResult<UserEntity> edit(String oldpassword,String newpassword,String username) throws ServletException, NoSuchAlgorithmException, IOException {
+        return manager.editprofile(oldpassword,newpassword,username);
     }
 
-    @Override
-    public  ActionResult<Integer> manager_del(String username){
-        return manager.manage_del(username);
-    }
-
-    @Override
-    public ActionResult<UserEntity> manager_up(String username){
-      return manager.manage_up(username);
-    }
-
-    @Override
-    public ActionResult<UserEntity> manager_act(String username){
-        return manager.manage_act(username);
-    }
 }
