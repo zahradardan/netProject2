@@ -1,51 +1,75 @@
-var username = "زهرا هاشمیان پور"
+var username;
 $(document).ready(function () {
+
+    username =window.localStorage.getItem('user');
     var user = document.getElementById("username");
     user.innerText = username;
-    $.getJSON("users.json", function (data) {
-        var refers = [];
-        var admin=false;
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].userName === username)
-                if(data[i].userType==="مدیر")
-                    admin=true;
-        }
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].userName === username || admin)
-                for (var j = 0; j < data[i].case.length; j++)
-                    refers.push(data[i].case[j])
+    var admin=true;
+    if(window.localStorage.getItem('userType')=="true")
+      admin=false;
 
-        }
-        cases(refers);
-        submitters();
-        responsibles();
-    });
+
+        var settings = {
+                     "async": true,
+                     "crossDomain": true,
+                     "url": "http://localhost:8080/contacts/rest/case/filterCases",
+                     "method": "GET",
+                     "headers": {
+                       "cache-control": "no-cache",
+                       "postman-token": "d94950d3-5ac0-2e19-a0c7-0863e48183b9"
+                     },
+                     "data": {
+                              "username": username,
+                              "userType":admin
+                             }
+                   }
+
+
+            $.ajax(settings).done(function (response) {
+              console.log(response);
+               var refers = [];
+                      for (var i = 0; i < response.data.length; i++)
+                       {
+                         refers.push(response.data[i]);
+                       }
+             cases(refers);
+            });
+
+             submitters(admin);
+             responsibles();
 
     $(".selection").change(function () {
         var filter = document.getElementsByClassName("selection");
         var refers = [];
-        $.getJSON("users.json", function (data) {
-            for (var i = 0; i < data.length; i++) {
-                for (var j = 0; j < data[i].case.length; j++) {
 
-                    var first = data[i].case[j].status === filter[0].value;
-                    var second = data[i].case[j].submitter === filter[1].value;
-                    var third = data[i].case[j].refer === filter[2].value;
 
-                    if (filter[0].value === "بدون فیلتر")
-                        first = true;
-                    if (filter[1].value === "بدون فیلتر")
-                        second = true;
-                    if (filter[2].value === "بدون فیلتر")
-                        third = true;
+         var settings = {
+                             "async": true,
+                             "crossDomain": true,
+                             "url": "http://localhost:8080/contacts/rest/case/filtering",
+                             "method": "GET",
+                             "headers": {
+                               "cache-control": "no-cache",
+                               "postman-token": "d94950d3-5ac0-2e19-a0c7-0863e48183b9"
+                             },
+                             "data": {
+                                      "status": filter[0].value,
+                                      "submitter":filter[1].value,
+                                      "responsible":filter[2].value
+                                     }
+         }
 
-                    if (first && second && third) {
-                        refers.push(data[i].case[j])
-                    }
-                }
-            }
+
+         $.ajax(settings).done(function (response) {
+           console.log(response);
+           alert(response.data.length)
+            for (var i = 0; i < response.data.length; i++)
+              {
+                refers.push(response.data[i]);
+              }
             cases(refers);
-        })
+          });
+
     });
 
     function cases(refers) {
@@ -153,59 +177,66 @@ $(document).ready(function () {
     }
 });
 
-function submitters() {
+function submitters(admin) {
     var submitters = document.getElementById("submitters");
 
-    $.getJSON("users.json", function (data) {
-        var userType;
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].userName === username)
-                userType = data[i].userType;
-        }
-        if (userType === "مدیر") {
+        if (admin == true) {
             var option = document.createElement("OPTION");
             option.innerText = "بدون فیلتر";
             submitters.appendChild(option);
-            for (var i = 0; i < data.length; i++) {
-                var option = document.createElement("OPTION");
-                option.innerText = data[i].userName;
-                submitters.appendChild(option);
+            var settings = {
+                         "async": true,
+                         "crossDomain": true,
+                         "url": "http://localhost:8080/contacts/rest/contact/users",
+                         "method": "GET",
+                         "headers": {
+                           "cache-control": "no-cache",
+                           "postman-token": "d94950d3-5ac0-2e19-a0c7-0863e48183b9"
+                         }
             }
-        } else {
+
+                $.ajax(settings).done(function (response) {
+                  console.log(response);
+
+                  for (var i = 0; i < response.data.length; i++) {
+                     var option = document.createElement("OPTION");
+                     option.innerText = response.data[i].name;
+                     submitters.appendChild(option);
+                  }
+                });
+        }
+        else {
             submitters.innerText = '';
             var option = document.createElement("OPTION");
             option.innerText = username;
             submitters.appendChild(option);
         }
-    })
-
-
 }
 
-function userType() {
-    $.getJSON("users.json", function (data) {
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].userName === username)
-                return data[i].userType;
-        }
-    })
-}
 
 function responsibles() {
     var responsible = document.getElementById("responsibles");
-    var duplicates = [];
-    $.getJSON("users.json", function (data) {
-        for (var i = 0; i < data.length; i++) {
-            for (var j = 0; j < data[i].case.length; j++) {
-                if (!duplicates.includes(data[i].case[j].refer)) {
-                    duplicates.push(data[i].case[j].refer)
-                    var option = document.createElement("OPTION");
-                    option.innerText = data[i].case[j].refer;
-                    responsible.appendChild(option);
-                }
+             var settings = {
+                         "async": true,
+                         "crossDomain": true,
+                         "url": "http://localhost:8080/contacts/rest/contact/responsibles",
+                         "method": "GET",
+                         "headers": {
+                           "cache-control": "no-cache",
+                           "postman-token": "d94950d3-5ac0-2e19-a0c7-0863e48183b9"
+                         }
             }
-        }
-    })
+
+            $.ajax(settings).done(function (response) {
+                  console.log(response);
+
+               for (var i = 0; i < response.data.length; i++) {
+                   var option = document.createElement("OPTION");
+                   option.innerText = response.data[i].name;
+                   responsible.appendChild(option);
+               }
+
+            });
 }
 
 

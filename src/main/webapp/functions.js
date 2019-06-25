@@ -3,13 +3,11 @@ function passwordcheck() {
     var input = document.getElementById("newpassword");
     var string = document.getElementById("newpassword").value;
     var error1 = document.getElementById("error1");
-    var error2 = document.getElementById("error2");
     var numcheck = false;
     var lettercheck = false;
 
     if(string.length == 0){
         error1.style.visibility = "hidden";
-        error2.style.visibility = "hidden";
     }
    else  if(string.length < 8){
          error1.style.visibility = "visible";
@@ -17,7 +15,6 @@ function passwordcheck() {
     }
     else{
         error1.style.visibility = "hidden";
-        error2.style.visibility = "hidden";
     }
 
 }

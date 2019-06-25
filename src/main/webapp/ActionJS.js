@@ -1,19 +1,32 @@
 $(document).ready(function () {
     var queryString = decodeURIComponent(window.location.search);
     queryString = queryString.substring(6);
-    $.getJSON("users.json", function (data) {
+
+    var settings = {
+                 "async": true,
+                 "crossDomain": true,
+                 "url": "http://localhost:8080/contacts/rest/case/getCase",
+                 "method": "GET",
+                 "headers": {
+                   "cache-control": "no-cache",
+                   "postman-token": "d94950d3-5ac0-2e19-a0c7-0863e48183b9"
+                 },
+                 "data": {
+                          "id": queryString,
+                         }
+               }
+
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+
 
         var Case=document.getElementById("case");
-        var refer;
-        var type ;
-
-        for (var i = 0; i < data.length; i++) {
-            for (var j = 0; j < data[i].case.length; j++)
-                if (data[i].case[j].caseId === queryString) {
-                    refer = data[i].case[j];
-                    type=data[i].userType;
-                }
-        }
+        var refer=response.data;
+        if(window.localStorage.getItem('userType')=="true")
+           var type="دانشجو";
+        else
+           var type="کارمند";
 
 
         //UP
@@ -89,16 +102,73 @@ $(document).ready(function () {
         down.appendChild(responsible);
         Case.appendChild(down);
 
-    })
+    });
 });
 
-var users;
+
+function executing(){
+
+ var queryString = decodeURIComponent(window.location.search);
+ queryString = queryString.substring(6);
+ var filter = document.getElementsByClassName("select-box");
+ var paraf=document.getElementById("paraf").value;
+
+ var settings = {
+                    "async": true,
+                    "crossDomain": true,
+                    "url": "http://localhost:8080/contacts/rest/case/action",
+                    "method": "POST",
+                    "headers": {
+                      "cache-control": "no-cache",
+                      "postman-token": "d94950d3-5ac0-2e19-a0c7-0863e48183b9"
+                    },
+                    "data": {
+                             "id":queryString,
+                             "status": filter[0].value,
+                            }
+                  }
+
+            $.ajax(settings).done(function (response) {
+            console.log(response);
+            alert(response.message);
+           });
+}
+
+
+function refering(){
+   var queryString = decodeURIComponent(window.location.search);
+    queryString = queryString.substring(6);
+    var refer=document.getElementById("refered").value;
+  var settings = {
+                   "async": true,
+                   "crossDomain": true,
+                   "url": "http://localhost:8080/contacts/rest/case/updateRefer",
+                   "method": "POST",
+                   "headers": {
+                     "cache-control": "no-cache",
+                     "postman-token": "d94950d3-5ac0-2e19-a0c7-0863e48183b9"
+                   },
+                   "data": {
+                            "id":queryString,
+                            "refer": refer
+                           }
+                 }
+
+           $.ajax(settings).done(function (response) {
+           console.log(response);
+           alert(response.message);
+          });
+
+}
 
 function execute() {
     var refButton = document.getElementById("refer");
     refButton.style.display = 'none';
     var exeButton = document.getElementById("execute");
     exeButton.style.display = 'block';
+
+ var send = document.getElementById("send1");
+        send.style.display = 'none';
 
     var send = document.getElementById("send");
     send.style.display = 'block';
@@ -113,12 +183,13 @@ function refer() {
     refButton.style.display = 'block';
 
     var send = document.getElementById("send");
-    send.style.display = 'block';
+    send.style.display = 'none';
+    var send = document.getElementById("send1");
+        send.style.display = 'block';
 }
 
-function action() {
-    var users = $.getJSON();
-    var users = JSON.parse();
-}
+
+
+
 
 

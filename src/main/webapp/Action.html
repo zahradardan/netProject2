@@ -26,7 +26,7 @@
 
     <div id="execute" class="actionStyle">
         <form action="">
-            <input type="text" name="comment" placeholder=" ...پاراف ">
+            <input id="paraf" type="text" name="comment" placeholder=" ...پاراف ">
         </form>
         <select id="selecting" name="status" class="select-box">
             <option class="optionStyle">باز</option>
@@ -38,11 +38,13 @@
 
     <div id="refer" class="actionStyle">
         <form action="">
-            <input type="text" name="refered" placeholder=" ...ارجاع به ">
+            <input type="text" name="refered" id="refered" placeholder=" ...ارجاع به ">
         </form>
     </div>
 
-    <button id="send" class="btn">ارسال</button>
+    <button id="send" class="btn" onclick="executing()">ارسال</button>
+    <button id="send1" class="btn" onclick="refering()">ارسال</button>
+
 </div>
 
 </body>

@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="CaseTB")
-public class CaseEntity {
+@Table(name="Case")
+public class Case {
 
     long caseID;
     String submitter;
@@ -26,6 +26,7 @@ public class CaseEntity {
         this.caseID = id;
     }
 
+    @Basic
     @Column(name="submitter")
     public String getSubmitter() {
         return submitter;
@@ -34,6 +35,7 @@ public class CaseEntity {
         this.submitter =submitter ;
     }
 
+    @Basic
     @Column(name="topic")
     public String getTopic() {
         return topic;
@@ -42,6 +44,7 @@ public class CaseEntity {
         this.topic = topic;
     }
 
+    @Basic
     @Column(name="description")
     public String getDescription() {
         return description;
@@ -50,6 +53,7 @@ public class CaseEntity {
         this.description =description ;
     }
 
+    @Basic
     @Column(name="status")
     public String getStatus() {
         return status;
@@ -58,6 +62,7 @@ public class CaseEntity {
         this.status =status ;
     }
 
+    @Basic
     @Column(name="refer")
     public String getRefer() {
         return refer;
@@ -66,6 +71,7 @@ public class CaseEntity {
         this.refer =refer;
     }
 
+    @Basic
     @Column(name="date")
     public String getDate() {
         return date;

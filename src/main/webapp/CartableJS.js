@@ -1,21 +1,41 @@
-var username = "شیوا عظیمی"
 $(document).ready(function () {
-    $.getJSON("users.json", function (data) {
-        var refers = [];
-        for (var i = 0; i < data.length; i++) {
-            for (var j = 0; j < data[i].case.length; j++)
-                if (data[i].case[j].refer === username) {
-                    refers.push(data[i].case[j])
-                }
-        }
 
-        for(var i=0;i<refers.length;i++){
+    var username =window.localStorage.getItem('user');
+    document.getElementById("username").innerText=username;
+
+
+
+    var settings = {
+             "async": true,
+             "crossDomain": true,
+             "url": "http://localhost:8080/contacts/rest/case/getUserCases",
+             "method": "GET",
+             "headers": {
+               "cache-control": "no-cache",
+               "postman-token": "d94950d3-5ac0-2e19-a0c7-0863e48183b9"
+             },
+             "data": {
+                      "username": username,
+                     }
+           }
+
+
+    $.ajax(settings).done(function (response) {
+      console.log(response);
+
+
+      alert(response.data.length);
+
+
+        for(var i=response.data.length-1;i>=0;i--){
+
 
             var refer=document.createElement("DIV");
-            refer.setAttribute('id',refers[i].caseId)
+            refer.setAttribute('id',response.data[i].id);
             refer.classList.add("refer");
             refer.classList.add("container");
-            // refer.setAttribute("submitter",refers[i].user);
+            refer.setAttribute("submitter",response.data[i].submitter);
+
             refer.onclick=function () {
                 var id = $(this).attr('id');
                 var queryString = "?case="+id;
@@ -30,11 +50,11 @@ $(document).ready(function () {
 
             var submitter=document.createElement("H2");
             submitter.className="submitter";
-            submitter.innerText=refers[i].submitter;
+            submitter.innerText=response.data[i].submitter;
 
             var date=document.createElement("P");
             date.className="date";
-            date.innerText=refers[i].date;
+            date.innerText=response.data[i].date;
 
             up.appendChild(image);
             up.appendChild(submitter);
@@ -57,10 +77,10 @@ $(document).ready(function () {
             var topic=document.createElement("P");
             topic.className="topic";
             topic.appendChild(divider[0]);
-            topic.appendChild(document.createTextNode(refers[i].topic));
+            topic.appendChild(document.createTextNode(response.data[i].topic));
 
             var description=document.createElement("P");
-            description.innerText=refers[i].description;
+            description.innerText=response.data[i].description;
 
             middle.appendChild(topic);
             middle.appendChild(description);
@@ -69,16 +89,16 @@ $(document).ready(function () {
             var down=document.createElement("DIV");
 
             var status=document.createElement("P");
-            // status.innerText=refers[i].status;
+            // status.innerText=response[i].status;
             status.appendChild(document.createTextNode("وضعیت"));
             status.appendChild(divider[1]);
-            status.appendChild(document.createTextNode(refers[i].status));
+            status.appendChild(document.createTextNode(response.data[i].status));
 
 
             var responsible=document.createElement("P");
             responsible.appendChild(document.createTextNode("مسئول"));
             responsible.appendChild(divider[2]);
-            responsible.appendChild(document.createTextNode(refers[i].refer));
+            responsible.appendChild(document.createTextNode(response.data[i].refer));
 
             down.appendChild(status);
             down.appendChild(responsible);
@@ -91,7 +111,8 @@ $(document).ready(function () {
             var container=document.getElementById("refers");
             container.appendChild(refer);
         }
-    })
+    });
+
 });
 
 
